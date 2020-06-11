@@ -40,11 +40,14 @@ function writeValue(writer: Writer, field: MetaField, val: any) {
             writer.writeBytes(val);
             break;
         case Type.MODEL:
+            if (!field.model) {
+                throw new Error('field model not defined');
+            }
             const subPacker = serialize(val, field.model);
             writer.writeBytes(subPacker, true);
             break;
         case Type.MAP:
-            const kv = [];
+            const kv: any = [];
             Object.keys(val).forEach((k) => {
                 if (val[k]) {
                     kv.push([k, val[k]]);
@@ -56,6 +59,9 @@ function writeValue(writer: Writer, field: MetaField, val: any) {
                     writer.utf8(kv[0]);
                 } else {
                     writer.int32(kv[0]);
+                }
+                if (!field.mapValueField) {
+                    throw new Error('field mapValueField not defined');
                 }
                 writeFiled(writer, field.mapValueField, kv[1]);
             });
@@ -79,7 +85,7 @@ function writeFiled(writer: Writer, field: MetaField, val: any) {
         flag |= FLAG_MAP_KEY_STRING;
     }
     writer.int8(flag);
-    const values = [];
+    const values: any[] = [];
     if (field.repeated) {
         if (!Array.isArray(val)) {
             throw new Error(`value is not array`);

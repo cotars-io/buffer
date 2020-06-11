@@ -63,10 +63,9 @@ export class Reader {
         return _float64[0];
     }
 
-    public length(): number {
+    public length() {
         const prefix = this.uint8();
         if (prefix < 0xc0) {
-            // fixstr
             return prefix & 0x1f;
         } else if (prefix === 0xd9) {
             return this.uint8();
@@ -75,6 +74,7 @@ export class Reader {
         } else if (prefix === 0xdb) {
             return this.uint32();
         }
+        return 0;
     }
 
     public utf8(): string {

@@ -7,7 +7,7 @@ import {
 } from "./common";
 import { Reader } from "./reader";
 
-function readValue(reader: Reader, flag: number) {
+function readValue(reader: Reader, flag: number): any {
     const isMapKeyString = (flag & FLAG_MAP_KEY_STRING) > 0;
     const type: Type = flag & 0x1f;
     const readFunctions = {
@@ -61,7 +61,7 @@ function readEachValue(reader: Reader): { tag: number; values: any } {
     const flag = reader.uint8();
     const isRepeated = (flag & FLAG_REPEATED) > 0;
     if (isRepeated) {
-        const values = [];
+        const values: any = [];
         const length = reader.uint16();
         for (let i = 0; i < length; i++) {
             values.push(readValue(reader, flag));
@@ -77,6 +77,9 @@ export function transform<T>(data: DeserializeType, meta: MetaModel): Partial<T>
     const object = new Object;
     meta.fields.forEach(f => {
         if (f.type == Type.MODEL) {
+            if (!f.model) {
+                throw new Error('field not defined!');
+            }
             object[f.name] = transform(data[f.tag], f.model);
         } else {
             object[f.name] = data[f.tag];
