@@ -98,7 +98,7 @@ export class Writer {
         this.length(Meta.length);
         this.datas.push(...Meta.codes);
     }
-    public writeBytes(bytes: Array<number>, withoutLength: boolean = true) {
+    public writeBytes(bytes: Array<number>, withoutLength: boolean = false) {
         !withoutLength && this.length(bytes.length);
         this.datas.push(...bytes);
     }

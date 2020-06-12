@@ -5,7 +5,7 @@ const _float64 = new Float64Array(_int32.buffer);
 
 export class Reader {
     protected offset = 0;
-    constructor(readonly datas: Array<number>) {}
+    constructor(readonly datas: number[]) {}
 
     public uint8(): number {
         return this.datas[this.offset++];
@@ -125,7 +125,7 @@ export class Reader {
         return string;
     }
 
-    public bytes(): Array<number> {
+    public bytes(): number[] {
         const length = this.length();
         const bytes = this.datas.slice(this.offset, this.offset + length);
         this.offset += length;

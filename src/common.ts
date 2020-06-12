@@ -17,19 +17,23 @@ export enum Type {
     MAP,
 }
 
-export type MetaField = {
+export type MetaFieldBase = {
     type: Type;
     repeated: boolean;
     name: string;
     tag: number;
     model?: MetaModel;
-    mapValueField?: MetaField;
+    mapValueField?: MetaFieldBase;
     mapKeyWithString?: boolean;
 }
 
-export type MetaModel = {
-    name: string;
+export type MetaField = MetaFieldBase & {
     tag: number;
+}
+
+export type MetaModel = {
+    ns: string;
+    name: string;
     fields: MetaField[];
 }
 
